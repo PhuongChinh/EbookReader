@@ -17,12 +17,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByPasswordAndUsername(String password, String username) {
-        return userRepository.findByPasswordAndUserName(password, username).orElse(null);
+        return userRepository.findByPasswordAndUsername(password, username).orElse(null);
     }
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUserName(username).orElse(null);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     @Override

@@ -18,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Cacheable(value = "GlobalCache")
 public interface UserRepository extends PagingAndSortingRepository<User, String> {
 
-    @Query(value = "select u from User u where u.password = :password and u.userName = :userName")
-    Optional<User> findByPasswordAndUserName(@Param("password") String password, @Param("userName") String userName);
+    @Query(value = "select u from User u where u.password = :password and u.username = :username")
+    Optional<User> findByPasswordAndUsername(@Param("password") String password, @Param("username") String username);
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Query(value = "select u from User u where u.userName = :userName")
-    Optional<User> findByUserName(@Param("userName") String userName);
+    @Query(value = "select u from User u where u.username = :username")
+    Optional<User> findByUsername(@Param("username") String username);
 
 }
