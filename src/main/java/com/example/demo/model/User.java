@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Table(name = "user", schema = "public")
+@Table(name = "USER", schema = "public")
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u order by u.username")
 public class User extends Auditable {
 	private static final long serialVersionUID = 1L;
@@ -39,20 +39,17 @@ public class User extends Auditable {
 	@Column(unique = true, nullable = false, length = 24)
 	private String Id;
 
-	@Column(length = 100, name = "username")
+	@Column(length = 256, name = "username")
 	private String username;
 
-	@Column(length = 100)
+	@Column(length = 256)
 	private String password;
 
-	@Column(length = 100, name = "full_name")
+	@Column(name = "full_name", length = 256)
 	private String fullName;
 
-	@Column(length = 100)
-	private String role;
-	
-	@Column(length = 100, nullable = true)
-	private String phone;
+	@Column(name = "FULL_NAME", length = 256)
+	private String email;
 	
 	@Column(nullable = true)
 	private boolean status;

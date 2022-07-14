@@ -3,6 +3,7 @@ package com.example.demo.common;
 import java.io.Serializable;
 import java.util.Properties;
 
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
@@ -15,9 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //https://www.baeldung.com/hibernate-identifiers
+@Slf4j
 public class ObjectIDGenerator implements IdentifierGenerator, Configurable {
 
-	static final Logger logger = LoggerFactory.getLogger(ObjectIDGenerator.class);
+	//static final Logger logger = LoggerFactory.getLogger(ObjectIDGenerator.class);
 
 	@Override
 	public void configure(Type type, Properties params, ServiceRegistry serviceRegistry) throws MappingException {
@@ -29,7 +31,7 @@ public class ObjectIDGenerator implements IdentifierGenerator, Configurable {
 	public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
 		ObjectId id = new ObjectId();
 		String sid = id.toHexString();// UUID.randomUUID().toString().replaceAll("-", "").substring(0, 24);
-		logger.info("Generate an ID: " + sid);
+		log.info("Generate an ID: " + sid);
 		return sid;
 	}
 }

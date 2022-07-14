@@ -15,21 +15,21 @@ import java.util.Date;
 public abstract class Auditable implements Serializable {
 
     @CreatedBy
-    @Column(name = "CREATED_BY")
+    @Column(name = "CREATED_BY", length = 24)
     protected String createdBy;
 
     @LastModifiedBy
-    @Column(name = "MODIFIED_BY")
-    protected String modifiedBy;
+    @Column(name = "UPDATED_BY", length = 24)
+    protected String updatedBy;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED_DATE")
-    protected Date createdDate;
+    @Column(name = "CREATED_TIME")
+    protected Date createdTime;
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED_DATE")
-    protected Date modifiedDate;
+    @Column(name = "UPDATED_TIME")
+    protected Date updatedTime;
 
 }
