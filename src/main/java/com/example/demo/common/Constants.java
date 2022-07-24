@@ -7,7 +7,12 @@ public final class Constants {
 	public final static String PHASE_FOUR = "Phase_four";
 	public final static String PHASE_FIVE = "Phase_five";
 	public final static String PHASE_COMPLETED = "Phase_completed";
-	
+
 	public final static String DOING = "Đang làm";
 	public final static String COMPLETED = "Đã xong";
+
+	public static final String DEFAULT_PAGE_NUMBER = "0";
+	public static final String DEFAULT_PAGE_SIZE = "1";
+	public static final String DEFAULT_SORT_BY = "id";
+	public static final String DEFAULT_SORT_DIRECTION = "asc";
 }

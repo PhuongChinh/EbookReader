@@ -45,7 +45,7 @@ public class User extends Auditable {
 	@Column(length = 256)
 	private String password;
 
-	@Column(name = "full_name", length = 256)
+	@Column(name = "full_name", length = 256,insertable = false,updatable = false)
 	private String fullName;
 
 	@Column(name = "FULL_NAME", length = 256)

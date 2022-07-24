@@ -1,65 +1,50 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import com.example.demo.dto.FileInfo;
+import com.example.demo.common.Constants;
+import com.example.demo.common.FileUtil;
 import com.example.demo.dto.MessageResp;
-import com.example.demo.service.FilesStorageService;
+import com.example.demo.service.PageService;
 
 @RestController
-@RequestMapping("/api/v1/files")
 public class FilesController {
-
+	
+	private final static String destinationDir = "uploads/pages/";
+	
 	@Autowired
-	FilesStorageService storageService;
+	private PageService pageService;
 
-	@PostMapping("/upload")
-	public ResponseEntity<MessageResp> uploadFile(@RequestParam("file") MultipartFile file) {
-		String message = "";
-		try {
-			storageService.save(file);
-			message = "Uploaded the file successfully: " + file.getOriginalFilename();
-
-			return ResponseEntity.status(HttpStatus.OK).body(new MessageResp(message));
-		} catch (Exception e) {
-			message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new MessageResp(message));
-		}
+	
+	
+	@GetMapping("/api/v1/book/{id}/page")
+	public ResponseEntity<MessageResp> getFile(@PathVariable String id, 
+			@RequestParam(value = "pageNo", defaultValue = Constants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		MessageResp messageResp = new MessageResp();
+		messageResp.setResult(pageService.findByBookId(id,paging));
+		return ResponseEntity.status(HttpStatus.OK).body(messageResp);
 	}
 
-	@GetMapping("/files")
-	public ResponseEntity<List<FileInfo>> getListFiles() {
-		List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-			String filename = path.getFileName().toString();
-			String url = MvcUriComponentsBuilder
-					.fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-			return new FileInfo(filename, url);
-		}).collect(Collectors.toList());
-		return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
-	}
+	
 
-	@GetMapping("/files/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-		Resource file = storageService.load(filename);
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-				.body(file);
+	@GetMapping(value="/uploads/pages/{bookName}/{imageName}",
+			  produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public @ResponseBody byte[] getImageWithMediaType(@PathVariable String bookName,@PathVariable String imageName) throws IOException {
+		return FileUtil.getImageWithMediaType(StringUtils.cleanPath(destinationDir + bookName + "/" + imageName));
 	}
 }
